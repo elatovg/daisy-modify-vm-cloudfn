@@ -38,7 +38,7 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
             daisy_image,
         "args": [
             f"-var:gcs_bucket {gcs_bucket}", f"-var:imported_image {imported_image}",
-            f"-var:new_image_name {new_image_name}"
+            f"-var:new_image_name {new_image_name}" "/workflows/image-wf.json"
         ],
     }]
     build.timeout = Duration(seconds=2400)
@@ -66,6 +66,12 @@ def main(event, context):
         gcs_bucket = "gs://cool-bucket"
 
     if 'data' in event:
-        image = base64.b64decode(event['data']).decode('utf-8')
+        build_info = base64.b64decode(event['data']).decode('utf-8')
+        build_status = build_info['status']
+        build_results = build_info['results']
+        print(build_results)
+        build_tags = build_info['tags']
+        if build_status == "SUCCESS":
+            image = build_tags
         # gcs_bucket = f"gs://{bucket_name}/{filename}"
-        run_daisy_with_cloudbuild(gcs_bucket, image)
+            run_daisy_with_cloudbuild(gcs_bucket, image)
