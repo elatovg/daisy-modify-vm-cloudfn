@@ -72,10 +72,6 @@ def main(event, context):
         build_status = build_info['status']
         if build_status == "SUCCESS":
             build_tags = build_info['tags']
-            print(type(build_tags))
-            print(build_tags)
-            print(build_tags[0])
-            image = build_tags
+            image = build_tags[0]
             if "ubuntu" in image:
-        # gcs_bucket = f"gs://{bucket_name}/{filename}"
                 run_daisy_with_cloudbuild(gcs_bucket, image)
