@@ -1,0 +1,23 @@
+steps:
+- id: 'Build-Docker-Image'
+  name: 'gcr.io/cloud-builders/docker'
+  args: ['build',
+         '-t', '${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_NAME}/${_IMAGE_NAME}:${_IMAGE_VERSION}',
+         '-t', '${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_NAME}/${_IMAGE_NAME}:latest',
+         '-f', 'Dockerfile',
+         '.']
+
+- id: 'Push-the-Docker-Image-to-AR'
+  waitFor: ['Build-Docker-Image']
+  name: 'gcr.io/cloud-builders/docker'
+  args: [ "push", "${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_NAME}/${_IMAGE_NAME}:${_IMAGE_VERSION}"]
+
+
+substitutions:
+  _AR_REGION: us-central1 # default value
+  _AR_NAME: tools # default value
+  _IMAGE_NAME: my_daisy # default value
+  _IMAGE_VERSION: 0.0.1 # default value
+
+images:
+- '${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_NAME}/${_IMAGE_NAME}:latest'
