@@ -38,7 +38,7 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
         "name":
             daisy_image,
         "args": [
-            f"-variables gcs_bucket={gcs_bucket},imported_image={imported_image},new_image_name={new_image_name}",
+            f"-variables \"gcs_bucket={gcs_bucket},imported_image={imported_image},new_image_name={new_image_name}\"",
             "/workflows/image-wf.json"
         ],
     }]
