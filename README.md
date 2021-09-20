@@ -216,11 +216,11 @@ export REGION="us-central1"
 export REPO_NAME="tools"
 export PUBSUB_TOPIC="cloud-builds"
 export DAISY_IMAGE_NAME="my_daisy"
-export DAISY_IMAGE_URL="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${DAISY_IMAGE_NAME}""
+export DAISY_IMAGE_URL="${REGION}-docker.pkg.dev/${PROJECT_ID}/${REPO_NAME}/${DAISY_IMAGE_NAME}"
 export CLOUD_SOURCE_REPO="github_elatovg_daisy-modify-vm-cloudfn"
 export SRC_PATH="https://source.developers.google.com/projects/${PROJECT_ID}/repos/${CLOUD_SOURCE_REPO}/moveable-aliases/main/paths/app"
 export CLOUD_FN_NAME="daisy-customize-vm"
 gcloud functions deploy ${CLOUD_FN_NAME} --runtime python39 \
   --set-env-vars "PROJECT_ID=${PROJECT_ID},GCS_BUCKET=${GCS_BUCKET},DAISY_IMAGE=${DAISY_IMAGE_URL}" \
-  --trigger-topic ${PUBSUB_TOPIC} --entry-point main --region ${REGION} \ 
+  --trigger-topic ${PUBSUB_TOPIC} --entry-point main --region ${REGION} \
   --source ${SRC_PATH} 

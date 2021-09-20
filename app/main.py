@@ -59,7 +59,7 @@ def main(event, context):
         """This Function was triggered by messageId {} published at {} to {}""".
         format(context.event_id, context.timestamp, context.resource["name"]))
 
-    # print(event)
+    print(event)
     if 'GCS_BUCKET' in os.environ:
         gcs_bucket = os.environ.get('GCS_BUCKET')
     else:
