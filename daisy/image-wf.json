@@ -2,7 +2,7 @@
     "Name": "custom-image",
     "Vars": {
         "gcs_bucket": "gs://cool-bucket",
-        "imported_image": "projects/elatov-demo/global/images/image-1",
+        "imported_image": "projects/gcp-project/global/images/image-1",
         "new_image_name": "custom_image"
       },
     "Sources": {

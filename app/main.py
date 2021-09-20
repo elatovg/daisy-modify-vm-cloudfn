@@ -31,6 +31,9 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
         daisy_image = os.environ.get('DAISY_IMAGE')
     else:
         daisy_image = "us-central1-docker.pkg.dev/gcp_project/tools/my_daisy"
+    
+
+    
 
     # Create a build using the parameters from
     # https://cloud.google.com/compute/docs/machine-images/import-machine-from-virtual-appliance#api
@@ -39,7 +42,7 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
             daisy_image,
         "args": [
             f"-var:gcs_bucket {gcs_bucket}", f"-var:imported_image {imported_image}",
-            f"-var:new_image_name {new_image_name}" "/workflows/image-wf.json"
+            f"-var:new_image_name {new_image_name}", "/workflows/image-wf.json"
         ],
     }]
     build.timeout = Duration(seconds=2400)
@@ -66,6 +69,11 @@ def main(event, context):
     else:
         gcs_bucket = "gs://cool-bucket"
 
+    if 'GCP_PROJECT' in os.environ:
+        gcp_project = os.environ.get('GCP_PROJECT')
+    else:
+        gcp_project = "cool-gcp-project"
+
     if 'data' in event:
         build_info = json.loads(base64.b64decode(event['data']).decode('utf-8'))
         # print(build_info)
@@ -74,8 +82,9 @@ def main(event, context):
             if "tags" in build_info:
                 build_tags = build_info['tags']
                 image = build_tags[0]
+                uri_image = f"projects/{gcp_project}/global/images/{image}"
                 if "ubuntu" in image:
-                    run_daisy_with_cloudbuild(gcs_bucket, image)
+                    run_daisy_with_cloudbuild(gcs_bucket, uri_image)
                 else:
                     mesg = f"build with id {build_info['id']} didn't match our tags"
             else:
