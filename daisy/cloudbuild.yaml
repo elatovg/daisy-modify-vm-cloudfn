@@ -21,3 +21,6 @@ substitutions:
 
 images:
 - '${_AR_REGION}-docker.pkg.dev/$PROJECT_ID/${_AR_NAME}/${_IMAGE_NAME}:latest'
+
+tags:
+- 'ubuntu-2019_19_19'

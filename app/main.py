@@ -5,6 +5,7 @@ Simple CloudFn to customize a GCE Image
 from datetime import datetime
 import base64
 import os
+import json
 from google.cloud.devtools import cloudbuild_v1
 import google.auth
 from google.protobuf.duration_pb2 import Duration
@@ -66,7 +67,7 @@ def main(event, context):
         gcs_bucket = "gs://cool-bucket"
 
     if 'data' in event:
-        build_info = base64.b64decode(event['data']).decode('utf-8')
+        build_info = json.loads(base64.b64decode(event['data']).decode('utf-8'))
         print(type(build_info))
         print(build_info)
         build_status = build_info['status']
