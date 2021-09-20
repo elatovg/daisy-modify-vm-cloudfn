@@ -67,6 +67,8 @@ def main(event, context):
 
     if 'data' in event:
         build_info = base64.b64decode(event['data']).decode('utf-8')
+        print(type(build_info))
+        print(build_info)
         build_status = build_info['status']
         build_results = build_info['results']
         print(build_results)
