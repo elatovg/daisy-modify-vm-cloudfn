@@ -68,13 +68,14 @@ def main(event, context):
 
     if 'data' in event:
         build_info = json.loads(base64.b64decode(event['data']).decode('utf-8'))
-        print(type(build_info))
-        print(build_info)
+        # print(build_info)
         build_status = build_info['status']
-        build_results = build_info['results']
-        print(build_results)
-        build_tags = build_info['tags']
         if build_status == "SUCCESS":
+            build_tags = build_info['tags']
+            print(type(build_tags))
+            print(build_tags)
+            print(build_tags[0])
             image = build_tags
+            if "ubuntu" in image:
         # gcs_bucket = f"gs://{bucket_name}/{filename}"
-            run_daisy_with_cloudbuild(gcs_bucket, image)
+                run_daisy_with_cloudbuild(gcs_bucket, image)
