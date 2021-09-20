@@ -38,10 +38,8 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
         "name":
             daisy_image,
         "args": [
-            "/workflows/image-wf.json",
-            f"-var:gcs_bucket {gcs_bucket}",
-            f"-var:imported_image {imported_image}",
-            f"-var:new_image_name {new_image_name}"
+            f"-variables gcs_bucket={gcs_bucket},imported_image={imported_image},new_image_name={new_image_name}",
+            "/workflows/image-wf.json"
         ],
     }]
     build.timeout = Duration(seconds=2400)
