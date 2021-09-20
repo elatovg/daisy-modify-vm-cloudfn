@@ -71,7 +71,16 @@ def main(event, context):
         # print(build_info)
         build_status = build_info['status']
         if build_status == "SUCCESS":
-            build_tags = build_info['tags']
-            image = build_tags[0]
-            if "ubuntu" in image:
-                run_daisy_with_cloudbuild(gcs_bucket, image)
+            if "tags" in build_info:
+                build_tags = build_info['tags']
+                image = build_tags[0]
+                if "ubuntu" in image:
+                    run_daisy_with_cloudbuild(gcs_bucket, image)
+                else:
+                    mesg = f"build with id {build_info['id']} didn't match our tags"
+            else:
+                mesg = f"build with id {build_info['id']} didn't have any tags"
+        else:
+            mesg = f"build with id {build_info['id']} wasn't successful"
+
+        print(mesg)
