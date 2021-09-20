@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Simple CloudFn to customize a GCE Image
+Simple CloudFn to customize a GCE Image with Daisy
 """
 from datetime import datetime
 import base64
@@ -31,9 +31,6 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
         daisy_image = os.environ.get('DAISY_IMAGE')
     else:
         daisy_image = "us-central1-docker.pkg.dev/gcp_project/tools/my_daisy"
-    
-
-    
 
     # Create a build using the parameters from
     # https://cloud.google.com/compute/docs/machine-images/import-machine-from-virtual-appliance#api
@@ -52,10 +49,6 @@ def run_daisy_with_cloudbuild(gcs_bucket, imported_image):
     print("IN PROGRESS:")
     print(operation.metadata)
 
-    # result = operation.result()
-    # # Print the completed status
-    # print("RESULT:", result.status)
-
 
 def main(event, context):
     """ Main Entry point for the cloudfunction"""
@@ -69,8 +62,8 @@ def main(event, context):
     else:
         gcs_bucket = "gs://cool-bucket"
 
-    if 'GCP_PROJECT' in os.environ:
-        gcp_project = os.environ.get('GCP_PROJECT')
+    if 'PROJECT_ID' in os.environ:
+        gcp_project = os.environ.get('PROJECT_ID')
     else:
         gcp_project = "cool-gcp-project"
 
