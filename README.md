@@ -4,7 +4,7 @@
 Let's upload out custom script to a GCS Bucket:
 
 ```bash
-export GCS_BUCKET="gs://elatov-demo-keys"
+export GCS_BUCKET="gs://YOUR_GCS_BUCKET"
 git clone https://github.com/elatovg/daisy-modify-vm-cloudfn.git
 cd daisy-modify-vm-cloudfn
 gsutil cp daisy/custom.bash ${GCS_BUCKET}/
@@ -22,7 +22,8 @@ chmod +x /opt/local/bin/daisy
 Now to run it:
 
 ```bash
-> daisy -project elatov-demo -zone us-central1-a -variables gcs_bucket=${GCS_BUCKET} image-wf.json
+export PROJECT_ID=$(gcloud config list --format 'value(core.project)')
+> daisy -project ${PROJECT_ID} -zone us-central1-a -var:gcs_bucket=${GCS_BUCKET} -var:imported_image=projects/YOUR_GCP_PROJECT/global/images/ubuntu-09-20-2021-20-38-38 -var:new_image_name=my-custom-ubuntu-09-20-2021-23-27-51 image-wf.json
 [Daisy] Running workflow "custom-image" (id=q8dx9)
 [custom-image]: 2021-09-20T13:39:44-04:00 Validating workflow
 [custom-image]: 2021-09-20T13:39:44-04:00 Validating step "create-disks"
@@ -31,10 +32,10 @@ Now to run it:
 [custom-image]: 2021-09-20T13:39:45-04:00 Validating step "create-image"
 [custom-image]: 2021-09-20T13:39:45-04:00 Validating step "delete-inst-install"
 [custom-image]: 2021-09-20T13:39:45-04:00 Validation Complete
-[custom-image]: 2021-09-20T13:39:45-04:00 Workflow Project: elatov-demo
+[custom-image]: 2021-09-20T13:39:45-04:00 Workflow Project: YOUR_GCP_PROJECT
 [custom-image]: 2021-09-20T13:39:45-04:00 Workflow Zone: us-central1-a
-[custom-image]: 2021-09-20T13:39:45-04:00 Workflow GCSPath: gs://elatov-demo-daisy-bkt
-[custom-image]: 2021-09-20T13:39:45-04:00 Daisy scratch path: https://console.cloud.google.com/storage/browser/elatov-demo-daisy-bkt/daisy-custom-image-20210920-17:39:43-q8dx9
+[custom-image]: 2021-09-20T13:39:45-04:00 Workflow GCSPath: gs://YOUR_GCP_PROJECT-daisy-bkt
+[custom-image]: 2021-09-20T13:39:45-04:00 Daisy scratch path: https://console.cloud.google.com/storage/browser/YOUR_GCP_PROJECT-daisy-bkt/daisy-custom-image-20210920-17:39:43-q8dx9
 [custom-image]: 2021-09-20T13:39:45-04:00 Uploading sources
 [custom-image]: 2021-09-20T13:39:45-04:00 Running workflow
 [custom-image]: 2021-09-20T13:39:45-04:00 Running step "create-disks" (CreateDisks)
@@ -44,7 +45,7 @@ Now to run it:
 [custom-image.create-inst-install]: 2021-09-20T13:39:57-04:00 CreateInstances: Creating instance "inst-install-custom-image-q8dx9".
 [custom-image]: 2021-09-20T13:40:13-04:00 Step "create-inst-install" (CreateInstances) successfully finished.
 [custom-image]: 2021-09-20T13:40:13-04:00 Running step "wait-for-inst-install" (WaitForInstancesSignal)
-[custom-image.create-inst-install]: 2021-09-20T13:40:13-04:00 CreateInstances: Streaming instance "inst-install-custom-image-q8dx9" serial port 1 output to https://storage.cloud.google.com/elatov-demo-daisy-bkt/daisy-custom-image-20210920-17:39:43-q8dx9/logs/inst-install-custom-image-q8dx9-serial-port1.log
+[custom-image.create-inst-install]: 2021-09-20T13:40:13-04:00 CreateInstances: Streaming instance "inst-install-custom-image-q8dx9" serial port 1 output to https://storage.cloud.google.com/YOUR_GCP_PROJECT-daisy-bkt/daisy-custom-image-20210920-17:39:43-q8dx9/logs/inst-install-custom-image-q8dx9-serial-port1.log
 [custom-image.wait-for-inst-install]: 2021-09-20T13:40:13-04:00 WaitForInstancesSignal: Waiting for instance "inst-install-custom-image-q8dx9" to stop.
 [custom-image.wait-for-inst-install]: 2021-09-20T13:41:53-04:00 WaitForInstancesSignal: Instance "inst-install-custom-image-q8dx9" stopped.
 [custom-image]: 2021-09-20T13:41:53-04:00 Step "wait-for-inst-install" (WaitForInstancesSignal) successfully finished.
@@ -100,8 +101,8 @@ licenses:
 - https://www.googleapis.com/compute/v1/projects/compute-image-tools/global/licenses/virtual-disk-import
 - https://www.googleapis.com/compute/v1/projects/ubuntu-os-cloud/global/licenses/ubuntu-2004-lts
 name: custom-image
-selfLink: https://www.googleapis.com/compute/v1/projects/elatov-demo/global/images/custom-image
-sourceDisk: https://www.googleapis.com/compute/v1/projects/elatov-demo/zones/us-central1-a/disks/disk-install-custom-image-q8dx9
+selfLink: https://www.googleapis.com/compute/v1/projects/YOUR_GCP_PROJECT/global/images/custom-image
+sourceDisk: https://www.googleapis.com/compute/v1/projects/YOUR_GCP_PROJECT/zones/us-central1-a/disks/disk-install-custom-image-q8dx9
 sourceDiskId: '1688225516972505485'
 sourceType: RAW
 status: READY
@@ -134,15 +135,15 @@ Here is sample output of a successful build:
 ```bash
 > gcloud builds submit . --config=cloudbuild.yaml
 Creating temporary tarball archive of 4 file(s) totalling 2.6 KiB before compression.
-Uploading tarball of [.] to [gs://elatov-demo_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz]
-Created [https://cloudbuild.googleapis.com/v1/projects/elatov-demo/locations/global/builds/fa56582e-1d80-4d79-840e-f0074efa43d9].
+Uploading tarball of [.] to [gs://YOUR_GCP_PROJECT_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz]
+Created [https://cloudbuild.googleapis.com/v1/projects/YOUR_GCP_PROJECT/locations/global/builds/fa56582e-1d80-4d79-840e-f0074efa43d9].
 Logs are available at [https://console.cloud.google.com/cloud-build/builds/fa56582e-1d80-4d79-840e-f0074efa43d9?project=1057850595212].
 ------------------------------------------------------------------------------------------------------------------ REMOTE BUILD OUTPUT ------------------------------------------------------------------------------------------------------------------
 starting build "fa56582e-1d80-4d79-840e-f0074efa43d9"
 
 FETCHSOURCE
-Fetching storage object: gs://elatov-demo_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz#1632163883003058
-Copying gs://elatov-demo_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz#1632163883003058...
+Fetching storage object: gs://YOUR_GCP_PROJECT_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz#1632163883003058
+Copying gs://YOUR_GCP_PROJECT_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz#1632163883003058...
 / [1 files][  1.1 KiB/  1.1 KiB]
 Operation completed over 1 objects/1.1 KiB.
 BUILD
@@ -172,12 +173,12 @@ Step #0 - "Build-Docker-Image":  ---> Running in adc0d056a807
 Step #0 - "Build-Docker-Image": Removing intermediate container adc0d056a807
 Step #0 - "Build-Docker-Image":  ---> 7579792869a7
 Step #0 - "Build-Docker-Image": Successfully built 7579792869a7
-Step #0 - "Build-Docker-Image": Successfully tagged us-central1-docker.pkg.dev/elatov-demo/tools/my_daisy:0.0.1
-Step #0 - "Build-Docker-Image": Successfully tagged us-central1-docker.pkg.dev/elatov-demo/tools/my_daisy:latest
+Step #0 - "Build-Docker-Image": Successfully tagged us-central1-docker.pkg.dev/YOUR_GCP_PROJECT/tools/my_daisy:0.0.1
+Step #0 - "Build-Docker-Image": Successfully tagged us-central1-docker.pkg.dev/YOUR_GCP_PROJECT/tools/my_daisy:latest
 Finished Step #0 - "Build-Docker-Image"
 Starting Step #1 - "Push-the-Docker-Image-to-AR"
 Step #1 - "Push-the-Docker-Image-to-AR": Already have image (with digest): gcr.io/cloud-builders/docker
-Step #1 - "Push-the-Docker-Image-to-AR": The push refers to repository [us-central1-docker.pkg.dev/elatov-demo/tools/my_daisy]
+Step #1 - "Push-the-Docker-Image-to-AR": The push refers to repository [us-central1-docker.pkg.dev/YOUR_GCP_PROJECT/tools/my_daisy]
 Step #1 - "Push-the-Docker-Image-to-AR": bb0e37f5d5b0: Preparing
 Step #1 - "Push-the-Docker-Image-to-AR": 652a1fefba59: Preparing
 Step #1 - "Push-the-Docker-Image-to-AR": c7df5622b14e: Preparing
@@ -189,8 +190,8 @@ Step #1 - "Push-the-Docker-Image-to-AR": c7df5622b14e: Pushed
 Step #1 - "Push-the-Docker-Image-to-AR": 0.0.1: digest: sha256:d6a535895c6356542e5746c53ad263c1e81978f373a871006498c0840f80ed02 size: 1156
 Finished Step #1 - "Push-the-Docker-Image-to-AR"
 PUSH
-Pushing us-central1-docker.pkg.dev/elatov-demo/tools/my_daisy:latest
-The push refers to repository [us-central1-docker.pkg.dev/elatov-demo/tools/my_daisy]
+Pushing us-central1-docker.pkg.dev/YOUR_GCP_PROJECT/tools/my_daisy:latest
+The push refers to repository [us-central1-docker.pkg.dev/YOUR_GCP_PROJECT/tools/my_daisy]
 bb0e37f5d5b0: Preparing
 652a1fefba59: Preparing
 c7df5622b14e: Preparing
@@ -203,15 +204,15 @@ latest: digest: sha256:d6a535895c6356542e5746c53ad263c1e81978f373a871006498c0840
 DONE
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 ID                                    CREATE_TIME                DURATION  SOURCE                                                                                    IMAGES                                                           STATUS
-fa56582e-1d80-4d79-840e-f0074efa43d9  2021-09-20T18:51:23+00:00  13S       gs://elatov-demo_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz  us-central1-docker.pkg.dev/elatov-demo/tools/my_daisy (+1 more)  SUCCESS
+fa56582e-1d80-4d79-840e-f0074efa43d9  2021-09-20T18:51:23+00:00  13S       gs://YOUR_GCP_PROJECT_cloudbuild/source/1632163882.21432-b3297ec0ed9b4f4c9daacd9a379df376.tgz  us-central1-docker.pkg.dev/YOUR_GCP_PROJECT/tools/my_daisy (+1 more)  SUCCESS
 ```
 
 ## Create an CloudFunction to be triggered by a PubSub Topic
-Here is the command to deploy the function:
+This is using a cloud build topic to get triggered. To configure cloudbuild to sent message to pubsub, follow instructions laid out in: [Subscribing to build notifications](https://cloud.google.com/build/docs/subscribe-build-notifications)
 
 ```bash
 export PROJECT_ID=$(gcloud config list --format 'value(core.project)')
-export GCS_BUCKET="gs://elatov-demo-keys/"
+export GCS_BUCKET="gs://YOUR_GCS_BUCKET/"
 export REGION="us-central1"
 export REPO_NAME="tools"
 export PUBSUB_TOPIC="cloud-builds"
@@ -223,4 +224,5 @@ export CLOUD_FN_NAME="daisy-customize-vm"
 gcloud functions deploy ${CLOUD_FN_NAME} --runtime python39 \
   --set-env-vars "PROJECT_ID=${PROJECT_ID},GCS_BUCKET=${GCS_BUCKET},DAISY_IMAGE=${DAISY_IMAGE_URL}" \
   --trigger-topic ${PUBSUB_TOPIC} --entry-point main --region ${REGION} \
-  --source ${SRC_PATH} 
+  --source ${SRC_PATH}
+```
