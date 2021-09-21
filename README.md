@@ -12,7 +12,7 @@ gsutil cp daisy/custom.bash ${GCS_BUCKET}/
 
 Link the github repo to cloud source repo to deploy the function from a source code repository (instructions laid out in [Mirroring a GitHub repository](https://cloud.google.com/source-repositories/docs/mirroring-a-github-repository))
 ## Test Locally
-Let's get the daisy binary:
+Let's get the **daisy** binary:
 
 ```bash
 curl https://storage.googleapis.com/compute-image-tools/release/darwin/daisy -o /opt/local/bin/daisy
@@ -61,7 +61,7 @@ export PROJECT_ID=$(gcloud config list --format 'value(core.project)')
 [Daisy] All workflows completed successfully.
 ```
 
-I went to see the serial console logs from the URL from the above output and I did see the mu custom packag installed:
+I went to see the serial console logs from the URL from the above output and I did see my custom package installed:
 
 ```bash
 Sep 20 17:40:51 inst-install-custom-image-q8dx9 GCEMetadataScripts[1630]: 2021/09/20 17:40:51 GCEMetadataScripts: Starting startup scripts (version 20210414.00-0ubuntu1~20.04.0).
@@ -89,7 +89,7 @@ And I saw the image created:
 > gcloud compute images describe custom-image
 archiveSizeBytes: '928279488'
 creationTimestamp: '2021-09-20T10:41:54.521-07:00'
-description: Image created by Daisy in workflow "custom-image" on behalf of elatov.
+description: Image created by Daisy in workflow "custom-image" on behalf of user.
 diskSizeGb: '10'
 id: '5653658423529928973'
 kind: compute#image
